@@ -1,46 +1,122 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - E_commerce_DSIR</title>
+    <title>@ViewData["Title"] - Gestion des Articles</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/E_commerce_DSIR.styles.css" asp-append-version="true" />
+
+    <style>
+        /* Structure de base pour forcer le footer en bas */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+
+        main {
+            flex: 1; /* pousse le footer vers le bas */
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #0069d9, #00bcd4);
+        }
+
+        .navbar-brand, .nav-link, .dropdown-item {
+            color: white !important;
+            font-weight: 500;
+        }
+
+            .nav-link:hover, .dropdown-item:hover {
+                color: #ffeb3b !important;
+            }
+
+        footer {
+            background-color: #212529;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+            footer a {
+                color: #ffc107;
+                text-decoration: none;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg shadow">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">E_commerce_DSIR</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fs-4" asp-controller="Home" asp-action="Index">🛍️ E_commerce_DSIR</a>
+                <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+                        aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarMenu">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <!-- Accueil -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Accueil</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+                        <!-- Catégories -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                📂 Catégories
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                                <li><a class="dropdown-item" asp-controller="Categorie" asp-action="Index">Toutes les catégories</a></li>
+                                <li><a class="dropdown-item" asp-controller="Categorie" asp-action="Nouvelle">➕ Nouvelle catégorie</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Articles -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="articlesDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                📰 Articles
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="articlesDropdown">
+                                <li><a class="dropdown-item" asp-controller="Article" asp-action="Index">Tous les articles</a></li>
+                                <li><a class="dropdown-item" asp-controller="Article" asp-action="Create">🆕 Nouvel article</a></li>
+                            </ul>
                         </li>
                     </ul>
+
+                    <!-- Barre de recherche -->
+                    <form class="d-flex" asp-controller="Article" asp-action="Search" method="get">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Rechercher un article..." aria-label="Search">
+                        <button class="btn btn-warning" type="submit">🔍</button>
+                    </form>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    <main class="container mt-4 mb-4">
+        @RenderBody()
+    </main>
+
+    <footer class="mt-auto">
         <div class="container">
-            &copy; 2025 - E_commerce_DSIR - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - <strong>Ilyes Cherif DSIR</strong> -
+            <a asp-controller="Home" asp-action="Privacy">Mentions légales</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
