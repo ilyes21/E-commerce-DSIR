@@ -1,4 +1,5 @@
-﻿using E_commerce_DSIR.Models.Repositories;
+﻿using E_commerce_DSIR.Models;
+using E_commerce_DSIR.Models.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,58 +39,73 @@ namespace E_commerce_DSIR.Controllers
         // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Category c)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _categorieRepository.Add(c);
+                TempData["SuccessMessage"] = "✅ Enregistrement avec succès !";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            else
             {
-                return View();
+                return View(c);
             }
         }
 
         // GET: CategoryController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var category = _categorieRepository.GetById(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
         }
 
         // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Category Ucategory)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _categorieRepository.Update(Ucategory);
+                TempData["SuccessMessage"] = "✅ Modification avec succès !";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            else
             {
-                return View();
+                return View(Ucategory);
             }
         }
 
         // GET: CategoryController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var category = _categorieRepository.GetById(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
         }
 
         // POST: CategoryController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Category Scategory)
         {
-            try
+            var category = _categorieRepository.GetById(id);
+            if (category == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+            _categorieRepository.Delete(id);
+            TempData["SuccessMessage"] = "✅ Suppression avec succès !";
+            return RedirectToAction(nameof(Index));
+
         }
     }
 }

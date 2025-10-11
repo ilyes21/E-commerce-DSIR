@@ -1,35 +1,121 @@
 ﻿@model IEnumerable<E_commerce_DSIR.Models.Category>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Liste des Catégories";
 }
 
-<h1>Index</h1>
+<div class="container mt-5">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">
+            📋 Liste des Catégories
+        </h2>
+        <a asp-action="Create" class="btn btn-success btn-lg shadow-sm">
+            ➕ Ajouter une catégorie
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center shadow-sm">
+            😔 Aucune catégorie enregistrée pour le moment.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body bg-light">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center mb-0">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nom de la Catégorie</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@index</td>
+                                    <td class="text-capitalize">@item.CategoryName</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-sm btn-info me-2 text-white shadow-sm">
+                                            👁️ Détails
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-sm btn-primary me-2 shadow-sm">
+                                            ✏️ Modifier
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-sm btn-danger shadow-sm">
+                                            🗑️ Supprimer
+                                        </a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<partial name="_Notification" />
+
+<style>
+    body {
+        background-color: #f1f5fb;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .table {
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+        .table thead {
+            background: linear-gradient(90deg, #0000, #000000);
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: #e3f2fd;
+        transition: 0.2s;
+    }
+
+    .btn {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn-success {
+        border: none;
+    }
+
+</style>

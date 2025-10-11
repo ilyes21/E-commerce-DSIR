@@ -28,12 +28,12 @@
         }
 
         .navbar-brand, .nav-link, .dropdown-item {
-            color: white !important;
+            color: black !important;
             font-weight: 500;
         }
 
             .nav-link:hover, .dropdown-item:hover {
-                color: #ffeb3b !important;
+                color: #000000 !important;
             }
 
         footer {
@@ -57,7 +57,7 @@
     <header>
         <nav class="navbar navbar-expand-lg shadow">
             <div class="container-fluid">
-                <a class="navbar-brand fs-4" asp-controller="Home" asp-action="Index">🛍️ E_commerce_DSIR</a>
+                <a class="navbar-brand fs-4" asp-controller="Home" asp-action="Index">Gestion des Articles</a>
                 <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
                         aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -68,18 +68,18 @@
 
                         <!-- Accueil -->
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Accueil</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index"> Accueil</a>
                         </li>
 
                         <!-- Catégories -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
-                                📂 Catégories
+                                 Catégories
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-                                <li><a class="dropdown-item" asp-controller="Categorie" asp-action="Index">Toutes les catégories</a></li>
-                                <li><a class="dropdown-item" asp-controller="Categorie" asp-action="Nouvelle">➕ Nouvelle catégorie</a></li>
+                                <li><a class="dropdown-item" asp-controller="Category" asp-action="Index">Toutes les catégories</a></li>
+                                <li><a class="dropdown-item" asp-controller="Category" asp-action="Create">➕ Nouvelle catégorie</a></li>
                             </ul>
                         </li>
 
@@ -87,7 +87,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="articlesDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
-                                📰 Articles
+                                 Articles
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="articlesDropdown">
                                 <li><a class="dropdown-item" asp-controller="Article" asp-action="Index">Tous les articles</a></li>
@@ -119,6 +119,8 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

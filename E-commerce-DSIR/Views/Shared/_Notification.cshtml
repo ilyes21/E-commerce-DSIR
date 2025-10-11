@@ -1,0 +1,13 @@
+﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script type="text/javascript">
+        toastr.options = {
+            "positionClass": "toast-top-left",
+            "timeOut": 7000
+        };
+        toastr.success('@TempData["SuccessMessage"]', 'Success');
+    </script>
+}
