@@ -1,0 +1,126 @@
+﻿@model IEnumerable<E_commerce_DSIR.Models.Product>
+
+@{
+    ViewData["Title"] = "Liste des Produits";
+    int index = 0;
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <!-- En-tête -->
+        <div class="card-header bg-gradient text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+            <h3 class="mb-0 text-center">
+                <i class="bi bi-box-seam"></i> Liste des Produits
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="text-muted mb-0">Nombre total : <strong>@Model.Count()</strong> produits</p>
+                <a asp-action="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Ajouter un nouveau produit
+                </a>
+            </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-warning text-center shadow-sm">
+                    😔 Aucun produit enregistré pour le moment.
+                </div>
+            }
+            else
+            {
+                <div class="container-fluid">
+                    @foreach (var item in Model)
+                    {
+                        if (index % 5 == 0)
+                        {
+                            @:<div class="card-group mb-4 justify-content-center gap-4">
+                        }
+
+                        <div class="card product-card shadow-sm border-0 rounded-4" style="width: 18rem;">
+                            <div class="card-img-top d-flex justify-content-center align-items-center bg-light" style="height: 180px;">
+                                @if (!string.IsNullOrEmpty(item.Image))
+                                {
+                                    <img src="~/images/@item.Image" alt="Image de @item.Name" style="max-width:100%; max-height:100%;" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Pas d'image</span>
+                                }
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title fw-bold">@item.Name</h5>
+                                <p class="card-text text-muted mb-1">
+                                    <i class="bi bi-tag"></i> <strong>@item.Price</strong> DT
+                                </p>
+                                <p class="card-text text-muted mb-1">
+                                    <i class="bi bi-tag"></i> Quntité :  <strong>@item.QteStock</strong> 
+                                </p>
+                                <p class="card-text">
+                                    <span class="badge bg-primary">@item.Category?.CategoryName</span>
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white text-center border-0">
+                                <div class="btn-group">
+                                    <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-outline-info btn-sm rounded-pill mx-1">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-outline-primary btn-sm rounded-pill mx-1">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-outline-danger btn-sm rounded-pill mx-1">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        index++;
+                        if (index % 5 == 0)
+                        {
+                            @:</div>
+                        }
+                    }
+
+                    @* Ferme la dernière ligne si elle n'est pas complète *@
+                    @if (index % 5 != 0)
+                    {
+                        @:</div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<partial name="_Notification" />
+
+<style>
+    body {
+        background-color: #f4f7fb;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .product-card {
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top img {
+        object-fit: cover;
+        border-radius: 0.75rem;
+    }
+
+    .btn-group .btn {
+        transition: 0.2s;
+    }
+
+    .btn-group .btn:hover {
+        transform: scale(1.1);
+    }
+</style>

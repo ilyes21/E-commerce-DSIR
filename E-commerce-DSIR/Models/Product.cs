@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commerce_DSIR.Models
 {
@@ -16,6 +17,10 @@ namespace E_commerce_DSIR.Models
         [Display(Name = "Quantité en unité :")]
         public int QteStock { get; set; }
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
+        public string? Image { get; set; }
+
+        [NotMapped]
+        public IFormFile? clientFile { get; set; }
     }
 }

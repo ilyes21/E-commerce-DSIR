@@ -66,6 +66,7 @@ namespace E_commerce_DSIR.Models.Repositories
                 p1.Price = p.Price;
                 p1.QteStock = p.QteStock;
                 p1.CategoryId = p.CategoryId;
+                p1.Image = p.Image;
                 context.SaveChanges();
             }
             return p1;

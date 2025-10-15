@@ -5,33 +5,34 @@
 }
 
 <div class="container mt-5">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary">
-            📋 Liste des Catégories
-        </h2>
-        <a asp-action="Create" class="btn btn-success btn-lg shadow-sm">
-            ➕ Ajouter une catégorie
-        </a>
-    </div>
-
-    @if (Model == null || !Model.Any())
-    {
-        <div class="alert alert-warning text-center shadow-sm">
-            😔 Aucune catégorie enregistrée pour le moment.
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-gradient" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+            <h3 class="mb-0 text-center"><i class="bi bi-tags"></i> Liste des Catégories</h3>
         </div>
-    }
-    else
-    {
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-body bg-light">
+
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="text-muted mb-0">Nombre total : <strong>@Model.Count()</strong> catégories</p>
+                <a asp-action="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Ajouter une nouvelle catégorie
+                </a>
+            </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-warning text-center shadow-sm">
+                    <i class="bi bi-exclamation-circle"></i> Aucune catégorie enregistrée pour le moment.
+                </div>
+            }
+            else
+            {
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle text-center mb-0">
-                        <thead class="table-primary">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-dark">
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nom de la Catégorie</th>
-                                <th scope="col">Actions</th>
+                                <th>#</th>
+                                <th>Nom de la Catégorie</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,18 +42,20 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="fw-bold">@index</td>
-                                    <td class="text-capitalize">@item.CategoryName</td>
+                                    <td>@index</td>
+                                    <td class="fw-semibold">@item.CategoryName</td>
                                     <td>
-                                        <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-sm btn-info me-2 text-white shadow-sm">
-                                            👁️ Détails
-                                        </a>
-                                        <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-sm btn-primary me-2 shadow-sm">
-                                            ✏️ Modifier
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-sm btn-danger shadow-sm">
-                                            🗑️ Supprimer
-                                        </a>
+                                        <div class="btn-group">
+                                            <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-outline-info btn-sm rounded-pill mx-1">
+                                                <i class="bi bi-eye"></i> Détails
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-outline-primary btn-sm rounded-pill mx-1">
+                                                <i class="bi bi-pencil-square"></i> Modifier
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-outline-danger btn-sm rounded-pill mx-1">
+                                                <i class="bi bi-trash"></i> Supprimer
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 index++;
@@ -60,62 +63,9 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            }
         </div>
-    }
+    </div>
 </div>
+
 <partial name="_Notification" />
-
-<style>
-    body {
-        background-color: #f1f5fb;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .card {
-        border-radius: 1rem;
-        overflow: hidden;
-        animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .table {
-        border-radius: 0.75rem;
-        overflow: hidden;
-    }
-
-        .table thead {
-            background: linear-gradient(90deg, #0000, #000000);
-            color: white;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-    .table-hover tbody tr:hover {
-        background-color: #e3f2fd;
-        transition: 0.2s;
-    }
-
-    .btn {
-        border-radius: 8px;
-        transition: all 0.2s ease;
-    }
-
-        .btn:hover {
-            transform: scale(1.05);
-        }
-
-    .btn-info {
-        background-color: #17a2b8;
-        border: none;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border: none;
-    }
-
-    .btn-success {
-        border: none;
-    }
-
-</style>

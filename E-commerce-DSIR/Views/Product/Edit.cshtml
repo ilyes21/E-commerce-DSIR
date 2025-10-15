@@ -1,0 +1,107 @@
+﻿@model E_commerce_DSIR.Models.Product
+@{
+    ViewData["Title"] = "Modifier un produit";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // utilise ton layout principal
+}
+
+<div class="content-wrapper">
+    <div class="page-header d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="page-title mb-1">✏️ Modifier un produit</h2>
+            <p class="text-muted mb-0">Modifiez les informations du produit sélectionné.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-primary">
+            ⬅️ Retour à la liste
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 p-4 rounded-3 bg-white">
+        <div class="d-flex align-items-center mb-3">
+            <div class="icon-container bg-warning text-white d-flex align-items-center justify-content-center rounded-circle me-3" style="width:50px;height:50px;">
+                <i class="bi bi-pencil-square fs-4"></i>
+            </div>
+            <h4 class="mb-0">Formulaire d’édition</h4>
+        </div>
+
+        <form asp-action="Edit" class="needs-validation" enctype="multipart/form-data" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="ProductId" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-semibold">Nom du produit</label>
+                <input asp-for="Name" class="form-control shadow-sm" placeholder="Ex : Ordinateur portable, T-shirt..." />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label fw-semibold">Prix (DT)</label>
+                <input asp-for="Price" class="form-control shadow-sm" placeholder="Ex : 49.99" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="QteStock" class="form-label fw-semibold">Quantité en stock</label>
+                <input asp-for="QteStock" class="form-control shadow-sm" placeholder="Ex : 25" />
+                <span asp-validation-for="QteStock" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="CategoryId" class="form-label fw-semibold">Catégorie</label>
+                <select asp-for="CategoryId" class="form-select shadow-sm" asp-items="@ViewBag.CategoryList">
+                    <option value="">-- Sélectionner une catégorie --</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <!-- Champ Upload Fichier -->
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" asp-for="clientFile" id="imageInput" class="form-control" accept="image/*" />
+
+                <!-- Image actuelle -->
+                <div class="mt-2">
+                    @if (!string.IsNullOrEmpty(Model.Image))
+                    {
+                        <img id="previewImage" src="~/images/@Model.Image" alt="Image de @Model.Name" style="max-width:200px;" />
+                    }
+                    else
+                    {
+                        <img id="previewImage" src="#" alt="Prévisualisation" style="max-width:200px; display:none;" />
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    💾 Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Prévisualisation de l'image avant l'upload
+        document.getElementById("imageInput").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("previewImage");
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+                preview.style.display = "none";
+            }
+        });
+    </script>
+}
