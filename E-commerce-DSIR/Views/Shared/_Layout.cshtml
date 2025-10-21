@@ -101,6 +101,8 @@
                         <input class="form-control me-2" type="search" name="val" placeholder="Rechercher un article...">
                         <button class="btn btn-warning" type="submit">🔍</button>
                     </form>
+                       
+                    @await Html.PartialAsync("_LoginPartial")
                 </div>
             </div>
         </nav>
@@ -112,8 +114,7 @@
 
     <footer class="mt-auto">
         <div class="container">
-            &copy; 2025 - <strong>Ilyes Cherif DSIR</strong> -
-            <a asp-controller="Home" asp-action="Privacy">Mentions légales</a>
+            &copy; 2025 - <strong>Ilyes Cherif DSIR</strong>
         </div>
     </footer>
 

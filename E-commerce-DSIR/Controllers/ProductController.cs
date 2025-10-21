@@ -1,5 +1,6 @@
 ﻿using E_commerce_DSIR.Models;
 using E_commerce_DSIR.Models.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,6 +8,7 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace E_commerce_DSIR.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         readonly IProductRepository _productRepository;
@@ -26,6 +28,7 @@ namespace E_commerce_DSIR.Controllers
             //ViewBag.CategotyList = listcategories;
         }
         // GET: ProductController
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var products = _productRepository.GetAll();

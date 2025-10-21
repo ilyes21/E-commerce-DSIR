@@ -1,10 +1,12 @@
 ﻿using E_commerce_DSIR.Models;
 using E_commerce_DSIR.Models.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce_DSIR.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         readonly ICategorieRepository _categorieRepository;
@@ -13,6 +15,7 @@ namespace E_commerce_DSIR.Controllers
             _categorieRepository = categorieRepository;
         }
         // GET: CategoryController
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var categories = _categorieRepository.GetAll();
