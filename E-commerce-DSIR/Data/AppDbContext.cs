@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_DSIR.Data
 {
-    public class AppDbContext: IdentityDbContext<IdentityUser>
+    public class AppDbContext: IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
