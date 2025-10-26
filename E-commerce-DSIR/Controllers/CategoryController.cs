@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce_DSIR.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
     public class CategoryController : Controller
     {
         readonly ICategorieRepository _categorieRepository;

@@ -8,7 +8,7 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace E_commerce_DSIR.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
     public class ProductController : Controller
     {
         readonly IProductRepository _productRepository;
