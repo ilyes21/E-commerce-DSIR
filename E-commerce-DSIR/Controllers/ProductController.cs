@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Drawing.Printing;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace E_commerce_DSIR.Controllers
@@ -20,24 +21,49 @@ namespace E_commerce_DSIR.Controllers
             _CategRepository = categRepository;
             _host = host;
         }
+        public void categoryList()
+        {
+            var categories = _CategRepository.GetAll();
+            ViewData["Categories"] = categories;
+        }
         public void createSelectList(int selectId = 1)
         {
             ViewBag.CategoryList = new SelectList(_CategRepository.GetAll(), "CategoryId", "CategoryName");
-            //var categories = _CategRepository.GetAll();
-            //SelectList listcategories = new SelectList(categories, "Id", "Name", selectId);
-            //ViewBag.CategotyList = listcategories;
+            categoryList();
         }
         // GET: ProductController
         [AllowAnonymous]
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    var products = _productRepository.GetAll();
+        //    return View(products);
+        //}
+        public IActionResult Index(int? categoryId, int page = 1)
         {
-            var products = _productRepository.GetAll();
+            int pageSize = 4; // Nombre de produits par page
+            var categories = _CategRepository.GetAll();
+            // Passer les catégories à la vue
+            ViewData["Categories"] = categories;
+            // Récupérer les produits en fonction de categoryId, s'il est spécifié
+            IQueryable<Product> productsQuery = _productRepository.GetAllProducts();
+            if (categoryId.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.CategoryId == categoryId);
+            }
+            // Pagination
+            var totalProducts = productsQuery.Count();
+            var products = productsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+            ViewBag.CurrentPage = page;
+            ViewBag.CategoryId = categoryId; // Passer categoryIdà la vue
             return View(products);
         }
-        // GET: ProductController
+
+        //GET: ProductController
         public ActionResult Search(String val)
         {
             var products = _productRepository.FindByName(val);
+            categoryList();
             return View("Index", products);
         }
 
@@ -49,12 +75,14 @@ namespace E_commerce_DSIR.Controllers
             {
                 return NotFound();
             }
+            categoryList();
             return View(Product);
         }
 
         // GET: ProductController/Create
         public ActionResult Create()
         {
+            categoryList();
             createSelectList();
             return View();
         }
@@ -95,6 +123,7 @@ namespace E_commerce_DSIR.Controllers
             }
             else
             {
+                categoryList();
                 createSelectList();
                 return View(product);
             }
@@ -109,6 +138,7 @@ namespace E_commerce_DSIR.Controllers
                 return NotFound();
             }
             createSelectList();
+            categoryList();
             return View(product);
         }
 
@@ -141,6 +171,7 @@ namespace E_commerce_DSIR.Controllers
                 }
                 _productRepository.Update(product);
                 TempData["SuccessMessage"] = "✅ Modification avec succès !";
+                categoryList();
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -160,6 +191,7 @@ namespace E_commerce_DSIR.Controllers
             {
                 return NotFound();
             }
+            categoryList();
             return View(prd);
         }
 
@@ -175,6 +207,7 @@ namespace E_commerce_DSIR.Controllers
             }
             _productRepository.Delete(id);
             TempData["SuccessMessage"] = "✅ Suppression avec succès !";
+            categoryList();
             return RedirectToAction(nameof(Index));
         }
     }

@@ -1,0 +1,326 @@
+﻿@{
+    ViewBag.Title = "Mon Panier";
+}
+
+<div class="container py-5">
+    <!-- En-tête avec titre et badge -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4"
+                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body py-4">
+                    <div class="d-flex align-items-center justify-content-between text-white">
+                        <h2 class="mb-0 fw-bold">
+                            <i class="fas fa-shopping-cart me-3"></i>Mon Panier
+                        </h2>
+                        @if (ViewBag.Liste.Count > 0)
+                        {
+                            <span class="badge bg-white text-primary fs-5 px-4 py-2">
+                                @ViewBag.Liste.Count article@(ViewBag.Liste.Count > 1 ? "s" : "")
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Liste.Count > 0)
+    {
+        <div class="row">
+            <!-- Colonne principale - Liste des produits -->
+            <div class="col-lg-8 mb-4">
+                @foreach (var item in ViewBag.Liste)
+                {
+                    <div class="card border-0 shadow-sm rounded-4 mb-3 cart-item-card" id="row-@item.Prod.ProductId">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <!-- Image du produit -->
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="product-image-container position-relative rounded-3 overflow-hidden shadow">
+                                        @if (!string.IsNullOrEmpty(item.Prod.Image))
+                                        {
+                                            <img src="~/images/@item.Prod.Image"
+                                                 class="img-fluid product-image"
+                                                 alt="@item.Prod.Name"
+                                                 style="width: 100%; height: 180px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center bg-light"
+                                                 style="height: 180px;">
+                                                <i class="fas fa-image fa-3x text-muted"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Détails du produit -->
+                                <div class="col-md-9">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h4 class="fw-bold text-dark mb-2">@item.Prod.Name</h4>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                                <i class="fas fa-tag me-1"></i>
+                                                @item.Prod.Category.CategoryName
+                                            </span>
+                                        </div>
+                                        <!-- Bouton supprimer -->
+                                        <button class="btn btn-outline-danger btn-sm rounded-circle RemoveLink p-0"
+                                                data-id="@item.Prod.ProductId"
+                                                title="Supprimer"
+                                                style="width: 40px; height: 40px;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="row align-items-center">
+                                        <!-- Contrôles de quantité -->
+                                        <div class="col-md-6 mb-3 mb-md-0">
+                                            <label class="text-muted small mb-2 d-block">
+                                                <i class="fas fa-boxes me-1"></i>Quantité
+                                            </label>
+                                            <div class="input-group input-group-lg shadow-sm" style="max-width: 160px;">
+                                                <button class="btn btn-outline-secondary MinProducts"
+                                                        type="button"
+                                                        data-id="@item.Prod.ProductId">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <input type="text"
+                                                       class="form-control text-center fw-bold fs-5"
+                                                       id="quantite_@item.Prod.ProductId"
+                                                       value="@item.quantite"
+                                                       readonly
+                                                       style="background-color: white;">
+                                                <button class="btn btn-outline-secondary PlusProducts"
+                                                        type="button"
+                                                        data-id="@item.Prod.ProductId">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Prix -->
+                                        <div class="col-md-6 text-md-end">
+                                            <div class="price-section">
+                                                <small class="text-muted d-block mb-1">Prix unitaire</small>
+                                                <p class="text-muted mb-2">@item.Prod.Price.ToString("N2") DT</p>
+                                                <small class="text-muted d-block mb-1">
+                                                    <span id="rquantite_@item.Prod.ProductId">@item.quantite</span> x @item.Prod.Price.ToString("N2") DT
+                                                </small>
+                                                <h4 class="text-success fw-bold mb-0">
+                                                    <span id="total_@item.Prod.ProductId">@item.TotalPrice.ToString("N2")</span> DT
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Bouton continuer les achats -->
+                <div class="d-grid d-md-block">
+                    <a href="~/Product/Index" class="btn btn-outline-primary btn-lg rounded-pill px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Continuer mes achats
+                    </a>
+                </div>
+            </div>
+
+            <!-- Colonne latérale - Résumé -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-lg rounded-4 sticky-summary">
+                    <!-- En-tête du résumé -->
+                    <div class="card-header border-0 text-white py-4 rounded-top-4"
+                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-calculator me-2"></i>Résumé
+                        </h4>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Détails du prix -->
+                        <div class="summary-details mb-4">
+                            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                                <span class="text-muted">Sous-total</span>
+                                <span class="fw-semibold fs-5">@ViewBag.total.ToString("N2") DT</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                                <span class="text-muted">
+                                    <i class="fas fa-shipping-fast me-2"></i>Livraison
+                                </span>
+                                <span class="fw-semibold text-success">Gratuite</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                                <span class="text-muted">TVA (19%)</span>
+                                <span class="fw-semibold">@((ViewBag.total * 0.19).ToString("N2")) DT</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fs-4 fw-bold text-dark">Total TTC</span>
+                                <span class="fs-3 fw-bold text-primary">
+                                    @((ViewBag.total * 1.19).ToString("N2")) DT
+                                </span>
+                            </div>
+                        </div>
+
+                        @if (ViewBag.total > 0)
+                        {
+                            <!-- Bouton commander -->
+                            <div class="d-grid gap-2 mb-4">
+                                <a href="~/Panier/Checkout"
+                                   class="btn btn-success btn-lg rounded-pill shadow-sm py-3">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <strong>Passer la commande</strong>
+                                </a>
+                            </div>
+
+                            <!-- Garanties et sécurité -->
+                            <div class="security-badges p-3 rounded-3" style="background-color: #f8f9fa;">
+                                <div class="mb-3">
+                                    <i class="fas fa-shield-alt text-success me-2"></i>
+                                    <small class="text-muted">Paiement 100% sécurisé</small>
+                                </div>
+                                <div class="mb-3">
+                                    <i class="fas fa-truck text-primary me-2"></i>
+                                    <small class="text-muted">Livraison gratuite et rapide</small>
+                                </div>
+                                <div class="mb-0">
+                                    <i class="fas fa-undo-alt text-warning me-2"></i>
+                                    <small class="text-muted">Retour gratuit sous 14 jours</small>
+                                </div>
+                            </div>
+
+                            <!-- Code promo (optionnel) -->
+                            <div class="mt-3">
+                                <div class="input-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Code promo">
+                                    <button class="btn btn-outline-primary" type="button">
+                                        Appliquer
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Aide et support -->
+                <div class="card border-0 shadow-sm rounded-4 mt-3">
+                    <div class="card-body p-3 text-center">
+                        <i class="fas fa-headset text-primary fa-2x mb-2"></i>
+                        <p class="mb-2 small text-muted">Besoin d'aide ?</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="fas fa-phone-alt me-1"></i>Contactez-nous
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Panier vide -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center py-5 px-4">
+                        <div class="empty-cart-animation mb-4">
+                            <i class="fas fa-shopping-cart fa-6x text-muted opacity-25"></i>
+                        </div>
+                        <h2 class="fw-bold mb-3">Votre panier est vide</h2>
+                        <p class="text-muted mb-4 fs-5">
+                            Vous n'avez pas encore ajouté d'articles à votre panier.<br>
+                            Explorez notre catalogue et trouvez ce qui vous plaît !
+                        </p>
+                        <a href="~/Product/Index" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                            <i class="fas fa-shopping-bag me-2"></i>
+                            Découvrir nos produits
+                        </a>
+
+                        <!-- Suggestions (optionnel) -->
+                        <div class="mt-5">
+                            <h5 class="text-muted mb-3">Pourquoi ne pas commencer par :</h5>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a href="#" class="badge bg-light text-dark p-2 text-decoration-none">
+                                    <i class="fas fa-fire me-1"></i>Nouveautés
+                                </a>
+                                <a href="#" class="badge bg-light text-dark p-2 text-decoration-none">
+                                    <i class="fas fa-star me-1"></i>Meilleures ventes
+                                </a>
+                                <a href="#" class="badge bg-light text-dark p-2 text-decoration-none">
+                                    <i class="fas fa-percent me-1"></i>Promotions
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/Monscript.js" type="text/javascript"></script>
+
+<style>
+    /* Animation et effets hover */
+    .cart-item-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .cart-item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+        }
+
+    .product-image {
+        transition: transform 0.5s ease;
+    }
+
+    .cart-item-card:hover .product-image {
+        transform: scale(1.1);
+    }
+
+    /* Boutons de quantité */
+    .input-group .btn {
+        transition: all 0.2s ease;
+        border-color: #dee2e6;
+    }
+
+        .input-group .btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            transform: scale(1.1);
+        }
+
+    .input-group input {
+        border-left: none;
+        border-right: none;
+    }
+
+    /* Bouton supprimer */
+    .RemoveLink {
+        transition: all 0.3s ease;
+    }
+
+        .RemoveLink:hover {
+            background-color: #dc3545 !important;
+            color: white !important;
+            border-color: #dc3545 !important;
+            transform: rotate(15deg) scale(1.15);
+        }
+
+    /* Résumé sticky */
+    .sticky-summary {
+        position: sticky;
+        top: 20px;
+    }
+
+    /* Animation panier vide */
+    .empty-cart-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+</style>

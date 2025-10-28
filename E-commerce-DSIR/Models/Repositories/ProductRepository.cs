@@ -43,6 +43,11 @@ namespace E_commerce_DSIR.Models.Repositories
             return context.Products.OrderBy(x => x.Name).Include(p => p.Category).ToList();
         }
 
+        public IQueryable<Product> GetAllProducts()
+        {
+            return context.Products.Include(p => p.Category);
+        }
+
         public Product GetById(int Id)
         {
             return context.Products.Include(p => p.Category).SingleOrDefault(p => p.ProductId == Id);

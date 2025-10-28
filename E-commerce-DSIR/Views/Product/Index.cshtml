@@ -1,126 +1,235 @@
-﻿@model IEnumerable<E_commerce_DSIR.Models.Product>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model IEnumerable<E_commerce_DSIR.Models.Product>
 
 @{
     ViewData["Title"] = "Liste des Produits";
-    int index = 0;
 }
 
 <div class="container mt-5">
     <div class="card shadow-lg border-0 rounded-4">
         <!-- En-tête -->
-        <div class="card-header bg-gradient text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
-            <h3 class="mb-0 text-center">
-                <i class="bi bi-box-seam"></i> Liste des Produits
+        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h3 class="mb-0 text-center fw-bold">
+                <i class="fas fa-box-open me-2"></i> Liste des Produits
             </h3>
         </div>
 
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <p class="text-muted mb-0">Nombre total : <strong>@Model.Count()</strong> produits</p>
+        <div class="card-body p-4">
+            <!-- Barre d'actions -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h5 class="mb-1">Catalogue de produits</h5>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-cubes me-1"></i>
+                        Nombre total : <strong class="text-primary">@Model.Count()</strong> produit@(Model.Count() > 1 ? "s" : "")
+                    </p>
+                </div>
                 <a asp-action="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
-                    <i class="bi bi-plus-circle"></i> Ajouter un nouveau produit
+                    <i class="fas fa-plus-circle me-2"></i> Ajouter un produit
                 </a>
             </div>
 
             @if (Model == null || !Model.Any())
             {
-                <div class="alert alert-warning text-center shadow-sm">
-                    😔 Aucun produit enregistré pour le moment.
+                <!-- Message si aucun produit -->
+                <div class="alert alert-warning alert-dismissible fade show shadow-sm rounded-3" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">Aucun produit disponible</h5>
+                            <p class="mb-0">Il n'y a actuellement aucun produit enregistré dans le catalogue.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
             else
             {
-                <div class="container-fluid">
+                <!-- Grille de produits -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                     @foreach (var item in Model)
                     {
-                        if (index % 5 == 0)
-                        {
-                            @:<div class="card-group mb-4 justify-content-center gap-4">
-                        }
+                        <div class="col">
+                            <div class="card product-card h-100 shadow-sm border-0 rounded-4">
+                                <!-- Image du produit -->
+                                <div class="position-relative overflow-hidden rounded-top-4" style="height: 200px; background-color: #f8f9fa;">
+                                    @if (!string.IsNullOrEmpty(item.Image))
+                                    {
+                                        <img src="~/images/@item.Image"
+                                             alt="@item.Name"
+                                             class="w-100 h-100 object-fit-cover product-image" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <div class="text-center text-muted">
+                                                <i class="fas fa-image fa-3x mb-2"></i>
+                                                <p class="mb-0 small">Pas d'image</p>
+                                            </div>
+                                        </div>
+                                    }
 
-                        <div class="card product-card shadow-sm border-0 rounded-4" style="width: 18rem;">
-                            <div class="card-img-top d-flex justify-content-center align-items-center bg-light" style="height: 180px;">
-                                @if (!string.IsNullOrEmpty(item.Image))
-                                {
-                                    <img src="~/images/@item.Image" alt="Image de @item.Name" style="max-width:100%; max-height:100%;" />
-                                }
-                                else
-                                {
-                                    <span class="text-muted">Pas d'image</span>
-                                }
-                            </div>
-                            <div class="card-body text-center">
-                                <h5 class="card-title fw-bold">@item.Name</h5>
-                                <p class="card-text text-muted mb-1">
-                                    <i class="bi bi-tag"></i> <strong>@item.Price</strong> DT
-                                </p>
-                                <p class="card-text text-muted mb-1">
-                                    <i class="bi bi-tag"></i> Quntité :  <strong>@item.QteStock</strong> 
-                                </p>
-                                <p class="card-text">
-                                    <span class="badge bg-primary">@item.Category?.CategoryName</span>
-                                </p>
-                            </div>
-                            <div class="card-footer bg-white text-center border-0">
-                                <div class="btn-group">
-                                    <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-outline-info btn-sm rounded-pill mx-1">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-outline-primary btn-sm rounded-pill mx-1">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-outline-danger btn-sm rounded-pill mx-1">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <!-- Badge de catégorie -->
+                                    @if (item.Category != null)
+                                    {
+                                        <span class="position-absolute top-0 end-0 badge bg-primary m-2 shadow-sm">
+                                            @item.Category.CategoryName
+                                        </span>
+                                    }
+                                </div>
+
+                                <!-- Corps de la carte -->
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title fw-bold text-dark mb-3 text-truncate" title="@item.Name">
+                                        @item.Name
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="text-muted small">
+                                                <i class="fas fa-tag me-1"></i> Prix
+                                            </span>
+                                            <span class="fs-5 fw-bold text-success">
+                                                @item.Price.ToString("N2") DT
+                                            </span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-muted small">
+                                                <i class="fas fa-boxes me-1"></i> Stock
+                                            </span>
+                                            <span class="badge @(item.QteStock > 10 ? "bg-success" : item.QteStock > 0 ? "bg-warning" : "bg-danger")">
+                                                @item.QteStock unité@(item.QteStock > 1 ? "s" : "")
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Boutons d'action -->
+                                    <div class="mt-auto">
+                                        <div class="d-grid gap-2">
+                                            <div class="btn-group" role="group">
+                                                <a asp-action="Details"
+                                                   asp-route-id="@item.ProductId"
+                                                   class="btn btn-outline-info btn-sm"
+                                                   title="Voir les détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <!-- Administration (visible uniquement pour Admin) -->
+                                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                                                {
+                                                    <a asp-action="Edit"
+                                                    asp-route-id="@item.ProductId"
+                                                    class="btn btn-outline-primary btn-sm"
+                                                    title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a asp-action="Delete"
+                                                    asp-route-id="@item.ProductId"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    title="Supprimer"
+                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="Panier" asp-action="AddProduct" class="btn btn-outline-secondary" asp-route-id="@item.ProductId">AjouterAu Panier</a>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        index++;
-                        if (index % 5 == 0)
-                        {
-                            @:</div>
-                        }
-                    }
-
-                    @* Ferme la dernière ligne si elle n'est pas complète *@
-                    @if (index % 5 != 0)
-                    {
-                        @:</div>
                     }
                 </div>
             }
         </div>
+
+        <!-- Pagination -->
+        @if (ViewBag.TotalPages != null && ViewBag.TotalPages > 1)
+        {
+            <div class="card-footer bg-light border-0 py-3">
+                <nav aria-label="Navigation des pages">
+                    <ul class="pagination justify-content-center mb-0">
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == (ViewBag.CurrentPage ?? 1) ? "active" : "")">
+                                <a class="page-link rounded-pill mx-1"
+                                   asp-action="Index"
+                                   asp-route-categoryId="@ViewBag.CategoryId"
+                                   asp-route-page="@i">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
     </div>
 </div>
 
 <partial name="_Notification" />
 
 <style>
-    body {
-        background-color: #f4f7fb;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
+    /* Styles personnalisés pour les produits */
     .product-card {
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(0,0,0,0.05);
     }
 
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+        }
+
+    .product-image {
+        transition: transform 0.5s ease;
     }
 
-    .card-img-top img {
-        object-fit: cover;
-        border-radius: 0.75rem;
-    }
-
-    .btn-group .btn {
-        transition: 0.2s;
-    }
-
-    .btn-group .btn:hover {
+    .product-card:hover .product-image {
         transform: scale(1.1);
     }
-</style>
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    /* Animations pour les boutons */
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+
+        .btn-group .btn:hover {
+            transform: translateY(-2px);
+        }
+
+    /* Style de pagination */
+    .page-link {
+        color: #667eea;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+        min-width: 40px;
+        text-align: center;
+    }
+
+        .page-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.1);
+        }
+
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+
+
+    
+    </style>
