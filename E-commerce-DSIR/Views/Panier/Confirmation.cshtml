@@ -1,0 +1,333 @@
+﻿@model E_commerce_DSIR.Models.Order
+@{
+    ViewData["Title"] = "Commande Confirmée";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Animation de succès -->
+            <div class="text-center mb-5">
+                <div class="success-animation mb-4">
+                    <div class="checkmark-circle">
+                        <div class="background"></div>
+                        <div class="checkmark">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold text-success mb-3">
+                    Commande validée avec succès !
+                </h1>
+                <p class="lead text-muted">
+                    Merci pour votre confiance, <strong class="text-primary">@Model.CustomerName</strong> !
+                    Votre commande a bien été enregistrée et sera traitée dans les plus brefs délais.
+                </p>
+            </div>
+
+            <!-- Carte de récapitulatif -->
+            <div class="card border-0 shadow-lg rounded-4 mb-4">
+                <!-- En-tête -->
+                <div class="card-header text-white py-4 rounded-top-4"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3 class="mb-0 fw-bold">
+                        <i class="fas fa-file-invoice me-2"></i>Récapitulatif de votre commande
+                    </h3>
+                </div>
+
+                <!-- Corps de la carte -->
+                <div class="card-body p-4">
+                    <!-- Numéro de commande -->
+                    <div class="detail-row p-3 mb-3 rounded-3" style="background-color: #f8f9fa;">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <span class="detail-label text-muted d-flex align-items-center">
+                                    <i class="fas fa-hashtag text-primary me-2"></i>
+                                    <strong>Numéro de commande</strong>
+                                </span>
+                            </div>
+                            <div class="col-md-7 text-md-end">
+                                <span class="detail-value badge bg-primary fs-6 px-3 py-2">
+                                    #@Model.Id.ToString().PadLeft(6, '0')
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="detail-row p-3 mb-3 rounded-3 border">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <span class="detail-label text-muted d-flex align-items-center">
+                                    <i class="fas fa-calendar-alt text-info me-2"></i>
+                                    <strong>Date de commande</strong>
+                                </span>
+                            </div>
+                            <div class="col-md-7 text-md-end">
+                                <span class="detail-value fw-semibold">
+                                    @Model.OrderDate.ToString("dddd dd MMMM yyyy", new System.Globalization.CultureInfo("fr-FR"))
+                                    <br>
+                                    <small class="text-muted">à @Model.OrderDate.ToString("HH:mm")</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Montant total -->
+                    <div class="detail-row p-3 mb-3 rounded-3 border-2" style="border: 2px solid #28a745;">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <span class="detail-label text-muted d-flex align-items-center">
+                                    <i class="fas fa-money-bill-wave text-success me-2"></i>
+                                    <strong>Montant total</strong>
+                                </span>
+                            </div>
+                            <div class="col-md-7 text-md-end">
+                                <span class="detail-value">
+                                    <h3 class="mb-0 text-success fw-bold">
+                                        @Model.TotalAmount.ToString("N2") DT
+                                    </h3>
+                                    <small class="text-muted">TTC</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Adresse de livraison -->
+                    <div class="detail-row p-3 rounded-3" style="background-color: #fff3cd;">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <span class="detail-label text-muted d-flex align-items-center">
+                                    <i class="fas fa-truck text-warning me-2"></i>
+                                    <strong>Adresse de livraison</strong>
+                                </span>
+                            </div>
+                            <div class="col-12">
+                                <div class="alert alert-light border mb-0 rounded-3 p-3">
+                                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                    <span class="detail-value fw-semibold">@Model.Address</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pied de carte avec statut -->
+                <div class="card-footer bg-light border-0 py-3 rounded-bottom-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div>
+                            <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                <i class="fas fa-clock me-2"></i>En cours de traitement
+                            </span>
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Vous recevrez un email de confirmation sous peu
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étapes suivantes -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-tasks text-primary me-2"></i>Prochaines étapes
+                    </h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-success">
+                                <i class="fas fa-check text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1 fw-bold">Commande reçue</h6>
+                                <small class="text-muted">Votre commande a été enregistrée avec succès</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-warning">
+                                <i class="fas fa-box text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1 fw-bold">Préparation en cours</h6>
+                                <small class="text-muted">Nous préparons vos articles avec soin</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-info">
+                                <i class="fas fa-truck text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1 fw-bold">Expédition</h6>
+                                <small class="text-muted">Livraison estimée sous 3-5 jours ouvrables</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-secondary">
+                                <i class="fas fa-home text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1 fw-bold">Livraison</h6>
+                                <small class="text-muted">Réception de votre commande</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-3 h-100 text-center p-3">
+                        <i class="fas fa-envelope fa-2x text-primary mb-2"></i>
+                        <h6 class="fw-bold mb-1">Email de confirmation</h6>
+                        <small class="text-muted">Envoyé à votre adresse email</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-3 h-100 text-center p-3">
+                        <i class="fas fa-headset fa-2x text-success mb-2"></i>
+                        <h6 class="fw-bold mb-1">Support client</h6>
+                        <small class="text-muted">Disponible 24h/24, 7j/7</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-3 h-100 text-center p-3">
+                        <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
+                        <h6 class="fw-bold mb-1">Achat sécurisé</h6>
+                        <small class="text-muted">Paiement 100% sécurisé</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+                <a href="~/Product/Index" class="btn btn-primary btn-lg rounded-pill px-5">
+                    <i class="fas fa-shopping-bag me-2"></i>Continuer mes achats
+                </a>
+                <a href="~/Account/Orders" class="btn btn-outline-primary btn-lg rounded-pill px-5">
+                    <i class="fas fa-list me-2"></i>Mes commandes
+                </a>
+            </div>
+
+            <!-- Note de remerciement -->
+            <div class="text-center mt-5 p-4 rounded-3" style="background-color: #f8f9fa;">
+                <i class="fas fa-heart text-danger fa-2x mb-3"></i>
+                <p class="mb-0 text-muted">
+                    <strong>Merci de votre confiance !</strong><br>
+                    Votre satisfaction est notre priorité. N'hésitez pas à nous contacter pour toute question.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animation de succès */
+    .success-animation {
+        display: inline-block;
+    }
+
+    .checkmark-circle {
+        width: 120px;
+        height: 120px;
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        margin: 0 auto;
+    }
+
+        .checkmark-circle .background {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            position: absolute;
+            animation: scaleIn 0.5s ease-in-out;
+        }
+
+        .checkmark-circle .checkmark {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            animation: scaleIn 0.5s ease-in-out 0.2s both;
+        }
+
+            .checkmark-circle .checkmark i {
+                font-size: 50px;
+                color: white;
+                animation: checkmarkPop 0.5s ease-in-out 0.4s both;
+            }
+
+
+    /* Cartes d'information */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+        }
+
+    /* Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 50px;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #28a745 0%, #6c757d 100%);
+        }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .timeline-icon {
+        position: absolute;
+        left: -40px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .timeline-content {
+        padding-left: 20px;
+    }
+
+    /* Détails de la commande */
+    .detail-row {
+        transition: all 0.3s ease;
+    }
+
+        .detail-row:hover {
+            transform: translateX(5px);
+        }
+
+    /* Animations d'entrée */
+    .card {
+        animation: fadeInUp 0.6s ease;
+    }
+</style>

@@ -14,8 +14,11 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
 
 builder.Services.AddIdentityDependencyInjection();
 
+// Add services Repository
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategorieRepository, CategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 
 
 var app = builder.Build();
@@ -42,10 +45,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
-//app.UseEndpoints(endpoint =>
-//{
-//    _ = endpoint.MapRazorPages();
-//});
 
 app.Run();

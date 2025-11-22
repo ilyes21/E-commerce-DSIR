@@ -14,5 +14,8 @@ namespace E_commerce_DSIR.Data
         public DbSet<E_commerce_DSIR.Models.Category> Categories { get; set; }
         public DbSet<E_commerce_DSIR.Models.Panier> Paniers { get; set; }
         public DbSet<E_commerce_DSIR.Models.Commande> Commandes { get; set; }
+        public DbSet<E_commerce_DSIR.Models.Order> Orders { get; set; }
+        public DbSet<E_commerce_DSIR.Models.OrderItem> OrderItems { get; set; }
+        public DbSet<E_commerce_DSIR.Models.Store> Stores { get; set; }
     }
 }

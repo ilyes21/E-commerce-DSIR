@@ -1,0 +1,317 @@
+﻿@model E_commerce_DSIR.ViewModels.OrderViewModel
+@{
+    ViewData["Title"] = "Finaliser la commande";
+}
+
+<div class="container py-5">
+    <!-- En-tête -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4"
+                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body py-4">
+                    <h2 class="mb-0 fw-bold text-white">
+                        <i class="fas fa-shopping-cart me-3"></i>Finaliser la commande
+                    </h2>
+                    <p class="text-white-50 mb-0 mt-2">
+                        <i class="fas fa-lock me-2"></i>Paiement 100% sécurisé
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages d'alerte -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                <div>
+                    <strong>Erreur !</strong>
+                    <p class="mb-0">@TempData["ErrorMessage"]</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle fa-2x me-3"></i>
+                <div>
+                    <strong>Succès !</strong>
+                    <p class="mb-0">@TempData["SuccessMessage"]</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="Checkout" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <!-- Colonne gauche - Formulaire -->
+            <div class="col-lg-7 mb-4">
+                <!-- Informations de livraison -->
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-transparent border-0 py-3">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-truck text-primary me-2"></i>Informations de livraison
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="form-group mb-4">
+                            <label for="Address" class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt text-danger me-2"></i>Adresse de livraison
+                            </label>
+                            <textarea class="form-control form-control-lg"
+                                      id="Address"
+                                      name="Address"
+                                      rows="3"
+                                      placeholder="Entrez votre adresse complète (rue, ville, code postal)"
+                                      required>@Model.Address</textarea>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Veuillez fournir une adresse complète pour la livraison
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Méthode de paiement -->
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-transparent border-0 py-3">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-credit-card text-success me-2"></i>Méthode de paiement
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="form-group">
+                            <label for="PaymentMethod" class="form-label fw-semibold mb-3">
+                                Choisissez votre mode de paiement
+                            </label>
+                            <div class="payment-options">
+                                <!-- Carte de crédit -->
+                                <div class="form-check payment-card mb-3 p-3 border rounded-3">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="PaymentMethod"
+                                           id="CreditCard"
+                                           value="CreditCard"
+                                           checked>
+                                    <label class="form-check-label w-100 d-flex align-items-center" for="CreditCard">
+                                        <div class="d-flex align-items-center flex-grow-1">
+                                            <i class="fas fa-credit-card fa-2x text-primary me-3"></i>
+                                            <div>
+                                                <strong class="d-block">Carte de crédit</strong>
+                                                <small class="text-muted">Visa, MasterCard, American Express</small>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-shield-alt text-success fa-lg"></i>
+                                    </label>
+                                </div>
+
+                                <!-- PayPal -->
+                                <div class="form-check payment-card mb-3 p-3 border rounded-3">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="PaymentMethod"
+                                           id="Paypal"
+                                           value="Paypal">
+                                    <label class="form-check-label w-100 d-flex align-items-center" for="Paypal">
+                                        <div class="d-flex align-items-center flex-grow-1">
+                                            <i class="fab fa-paypal fa-2x text-primary me-3"></i>
+                                            <div>
+                                                <strong class="d-block">PayPal</strong>
+                                                <small class="text-muted">Paiement rapide et sécurisé</small>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-shield-alt text-success fa-lg"></i>
+                                    </label>
+                                </div>
+
+                                <!-- Paiement à la livraison (optionnel) -->
+                                <div class="form-check payment-card p-3 border rounded-3">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="PaymentMethod"
+                                           id="CashOnDelivery"
+                                           value="CashOnDelivery">
+                                    <label class="form-check-label w-100 d-flex align-items-center" for="CashOnDelivery">
+                                        <div class="d-flex align-items-center flex-grow-1">
+                                            <i class="fas fa-money-bill-wave fa-2x text-success me-3"></i>
+                                            <div>
+                                                <strong class="d-block">Paiement à la livraison</strong>
+                                                <small class="text-muted">Payez en espèces lors de la réception</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informations de sécurité -->
+                        <div class="alert alert-info mt-4 rounded-3 border-0" style="background-color: #e3f2fd;">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-lock fa-lg text-primary me-3 mt-1"></i>
+                                <div>
+                                    <strong>Paiement sécurisé</strong>
+                                    <p class="mb-0 small">
+                                        Toutes vos transactions sont cryptées et sécurisées.
+                                        Vos informations bancaires ne sont jamais stockées sur nos serveurs.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne droite - Résumé de commande -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-lg rounded-4 sticky-summary">
+                    <!-- En-tête résumé -->
+                    <div class="card-header text-white py-3 rounded-top-4"
+                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-file-invoice me-2"></i>Résumé de la commande
+                        </h4>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Articles du panier -->
+                        <h5 class="mb-3 fw-bold">
+                            <i class="fas fa-shopping-basket me-2 text-primary"></i>
+                            Vos articles (@Model.CartItems.Count)
+                        </h5>
+
+                        <div class="cart-items-summary mb-4" style="max-height: 400px; overflow-y: auto;">
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <div class="d-flex justify-content-between align-items-start mb-3 pb-3 border-bottom">
+                                    <div class="flex-grow-1 me-3">
+                                        <h6 class="mb-1 fw-semibold">@item.ProductName</h6>
+                                        <small class="text-muted">
+                                            @item.Quantity x @item.Price.ToString("N2") DT
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <strong class="text-primary">
+                                            @((item.Price * item.Quantity).ToString("N2")) DT
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <!-- Champs cachés -->
+                                <input type="hidden" name="CartItems[@Model.CartItems.IndexOf(item)].ProductName" value="@item.ProductName" />
+                                <input type="hidden" name="CartItems[@Model.CartItems.IndexOf(item)].Quantity" value="@item.Quantity" />
+                                <input type="hidden" name="CartItems[@Model.CartItems.IndexOf(item)].Price" value="@item.Price" />
+                            }
+                        </div>
+
+                        <!-- Calculs -->
+                        <div class="pricing-details">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Sous-total</span>
+                                <span class="fw-semibold">@Model.TotalAmount.ToString("N2") DT</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">
+                                    <i class="fas fa-shipping-fast me-1"></i>Livraison
+                                </span>
+                                <span class="fw-semibold text-success">Gratuite</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">TVA (19%)</span>
+                                <span class="fw-semibold">@((Model.TotalAmount * 0.19).ToString("N2")) DT</span>
+                            </div>
+                            <hr class="my-3">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <span class="fs-4 fw-bold">Total TTC</span>
+                                <span class="fs-3 fw-bold text-success">
+                                    @((Model.TotalAmount * 1.19).ToString("N2")) DT
+                                </span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="TotalAmount" value="@Model.TotalAmount" />
+
+                        <!-- Bouton de validation -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill shadow py-3">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Confirmer la commande</strong>
+                            </button>
+                        </div>
+
+                        <!-- Garanties -->
+                        <div class="mt-4 p-3 rounded-3" style="background-color: #f8f9fa;">
+                            <div class="mb-2">
+                                <i class="fas fa-shield-alt text-success me-2"></i>
+                                <small class="text-muted">Paiement sécurisé</small>
+                            </div>
+                            <div class="mb-2">
+                                <i class="fas fa-truck text-primary me-2"></i>
+                                <small class="text-muted">Livraison gratuite</small>
+                            </div>
+                            <div class="mb-0">
+                                <i class="fas fa-undo-alt text-warning me-2"></i>
+                                <small class="text-muted">Retour sous 14 jours</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Besoin d'aide -->
+                <div class="card border-0 shadow-sm rounded-4 mt-3">
+                    <div class="card-body p-3 text-center">
+                        <i class="fas fa-headset text-primary fa-2x mb-2"></i>
+                        <p class="mb-2 small fw-semibold">Besoin d'aide ?</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="fas fa-phone-alt me-1"></i>Contactez-nous
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Sticky summary */
+    .sticky-summary {
+        position: sticky;
+        top: 20px;
+    }
+
+    /* Payment cards */
+    .payment-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background-color: #fff;
+    }
+
+        .payment-card:hover {
+            background-color: #f8f9fa;
+            border-color: #667eea !important;
+            transform: translateX(5px);
+        }
+
+        .payment-card input[type="radio"]:checked + label {
+            background-color: #e7f3ff;
+        }
+
+        .payment-card input[type="radio"]:checked ~ * {
+            border-left: 4px solid #667eea;
+        }
+
+    /* Animations */
+    .card {
+        animation: fadeInUp 0.5s ease;
+    }
+
+</style>

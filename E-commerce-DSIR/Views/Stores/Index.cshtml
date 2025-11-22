@@ -1,0 +1,152 @@
+﻿@model IEnumerable<E_commerce_DSIR.Models.Store>
+
+@{
+    ViewData["Title"] = "Liste des Stores";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-gradient" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+            <h3 class="mb-0 text-center"><i class="bi bi-shop"></i> Liste des Stores</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="text-muted mb-0">Nombre total : <strong>@Model.Count()</strong> stores</p>
+                <a asp-action="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Ajouter un nouveau Store
+                </a>
+            </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-warning text-center shadow-sm">
+                    <i class="bi bi-exclamation-circle"></i> Aucun store enregistré pour le moment.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Nom du Store</th>
+                                <th>Adresse</th>
+                                <th>Téléphone</th>
+                                <th>Long</th>
+                                <th>Lat</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td class="fw-semibold">@item.Name</td>
+                                    <td>@item.Address</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.Long</td>
+                                    <td>@item.Lat</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm rounded-pill mx-1">
+                                                <i class="bi bi-eye"></i> Détails
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm rounded-pill mx-1">
+                                                <i class="bi bi-pencil-square"></i> Modifier
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm rounded-pill mx-1">
+                                                <i class="bi bi-trash"></i> Supprimer
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            45
+        </div>
+    </div>
+</div>
+
+<partial name="_Notification" />
+<script src="~/lib/leaflet/leaflet.js"></script>
+<script src="~/lib/leaflet/leaflet.min.js"></script>
+
+<div id="map" style="width:100%;height:380px"></div>
+<script>
+    var map = L.map('map').setView([34.749675, 10.702305], 12);
+
+    L.tileLayer('https://api.maptiler.com/maps/topo-v2/{z}/{x}/{y}.png?key=uXcWL0hw4Q7FlQsZjG7h', {
+        attribution: '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+    }).addTo(map);
+
+    var leafletIconStor = L.icon({
+        iconUrl: '/images/store-icon.png',
+        iconSize: [32, 37],
+        iconAnchor: [16, 37],
+        popupAnchor: [0, -37]
+	});
+
+    var jsModel = @Html.Raw(Json.Serialize(Model));
+    console.log('Modèle complet:', jsModel);
+
+    // Afficher toutes les propriétés du premier élément
+    if (jsModel && jsModel.length > 0) {
+        console.log('Premier store - toutes les propriétés:', jsModel[0]);
+        console.log('Clés disponibles:', Object.keys(jsModel[0]));
+    }
+
+    for (var i = 0; i < jsModel.length; i++) {
+        var item = jsModel[i];
+
+        // Essayez différentes variantes de noms
+        var lat = item.Lat || item.lat || item.Latitude || item.latitude;
+        var lng = item.Long || item.long || item.Lng || item.lng || item.Longitude || item.longitude;
+        var name = item.Name || item.name || '';
+        var address = item.Address || item.address || '';
+
+        console.log(`Store ${i}: ${name}`);
+        console.log(`  - Lat trouvé: ${lat}`);
+        console.log(`  - Long trouvé: ${lng}`);
+
+        if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+            var popupContent = '<div style="text-align:center;">';
+            if (name) {
+                popupContent += '<b>' + name + '</b>';
+            }
+            if (address) {
+                popupContent += '<br/>' + address;
+            }
+            popupContent += '</div>';
+
+            L.marker([parseFloat(lat), parseFloat(lng)],{icon:leafletIconStor}).addTo(map)
+                .bindPopup(popupContent);
+        } else {
+            console.error(`Coordonnées invalides pour ${name || 'Store ' + i}`);
+        }
+    }
+ //    var circel = L.circle([34.749675, 10.702305], {
+ //        color: 'blue',
+ //        fillColor: '#30f',
+ //        fillOpacity: 0.2,
+ //        radius: 500
+	// }).addTo(map).bindPopup('Zone de recherche');
+ //    var polygon = L.polygon([
+ //        [34.761, 10.65],
+ //        [34.77, 10.72],
+ //        [34.73, 10.74]
+ //    ], {
+ //        color: 'green',
+ //        fillColor: '#3f3',
+ //        fillOpacity: 0.2
+	// }).addTo(map).bindPopup('المنطقة البلدية - بلدية العين');
+</script>
